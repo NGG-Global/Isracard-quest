@@ -79,13 +79,12 @@ const ExportCard = forwardRef<HTMLDivElement, Props>(({ results }, ref) => {
                   borderRadius: '23px',
                   background: fill,
                   color: onFill,
-                  textAlign: 'center',
                   direction: 'ltr',
-                  paddingTop: '12px',
                 }}
               >
-                <div style={{ display: 'block', fontSize: '28px', fontWeight: 700, lineHeight: '30px', height: '30px' }}>{result.score}</div>
-                <div style={{ display: 'block', fontSize: '10px', opacity: 0.8, lineHeight: '12px', height: '12px' }}>/25</div>
+                {/* Absolute positions: html2canvas mis-stacks flex/inline line boxes here */}
+                <div style={{ position: 'absolute', top: '10px', left: 0, right: 0, textAlign: 'center', fontSize: '28px', fontWeight: 700, lineHeight: '30px' }}>{result.score}</div>
+                <div style={{ position: 'absolute', top: '44px', left: 0, right: 0, textAlign: 'center', fontSize: '10px', opacity: 0.8, lineHeight: '12px' }}>/25</div>
               </div>
 
               <div
