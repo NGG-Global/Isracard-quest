@@ -1,0 +1,208 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Isracard design tokens — read from the Isracard/NGG deck design system.
+  Values are used as given; no new colour, radius or effect is introduced.
+*/
+:root {
+  --isracard-blue: #2221ba;
+  --isracard-ink: #000000;
+  --isracard-white: #ffffff;
+  --accent-violet: #763af8;
+  --accent-purple: #8227ff;
+  --accent-periwinkle: #7b7bff;
+  --accent-peach: #ffbb80;
+  --accent-peach-alt: #febf8a;
+  --accent-amber: #ffa229;
+  --accent-orange: #ff5001;
+  --neutral-line: #bfbfbf;
+  --neutral-e8: #e8e8e8;
+  --neutral-shadow: #41464d;
+  --text-body: var(--isracard-ink);
+  --text-title: var(--isracard-ink);
+  --text-on-brand: var(--isracard-white);
+  --surface-page: var(--isracard-white);
+  --surface-card: var(--isracard-white);
+  --surface-brand: var(--isracard-blue);
+  --on-blue: var(--isracard-white);
+  --on-violet: var(--isracard-white);
+  --on-purple: var(--isracard-white);
+  --on-orange: var(--isracard-white);
+  --on-periwinkle: var(--isracard-ink);
+  --on-peach: var(--isracard-ink);
+  --on-amber: var(--isracard-ink);
+  --radius-card: 37px;
+  --radius-tile: 23px;
+  --border-card: 1px solid #bfbfbf;
+  --shadow-card: 0 5.33px 13.33px rgba(65, 70, 77, 0.5);
+  --fw-regular: 400;
+  --fw-bold: 700;
+  --lh-tight: 0.9;
+  --lh-body: 1.25;
+  --font-core: 'Assistant', 'Segoe UI', Arial, sans-serif;
+}
+
+@layer base {
+  html {
+    direction: rtl;
+    font-family: var(--font-core);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background: var(--surface-page);
+    color: var(--text-body);
+    overflow-x: hidden;
+    min-height: 100dvh;
+    font-weight: var(--fw-regular);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  h1, h2, h3, h4 {
+    color: var(--text-title);
+    font-weight: var(--fw-bold);
+  }
+}
+
+@layer components {
+  /* White rounded card — InfoCard */
+  .ds-card {
+    background: var(--surface-card);
+    border: var(--border-card);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Flat variant for dense inner content (no shadow) */
+  .ds-card-flat {
+    background: var(--surface-card);
+    border: var(--border-card);
+    border-radius: var(--radius-card);
+  }
+
+  /* Rounded colour square — ColorTile */
+  .ds-tile {
+    border-radius: var(--radius-tile);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: var(--fw-bold);
+    direction: ltr;
+    flex-shrink: 0;
+  }
+
+  /* Primary action — Isracard blue plate, white text. State = opacity only. */
+  .btn-primary {
+    @apply px-8 py-3.5 text-base;
+    background: var(--isracard-blue);
+    color: var(--on-blue);
+    border-radius: var(--radius-tile);
+    font-weight: var(--fw-bold);
+    transition: opacity 200ms ease;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    opacity: 0.88;
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  /* Secondary action — white card surface with the card stroke */
+  .btn-secondary {
+    @apply px-6 py-3 text-sm;
+    background: var(--surface-card);
+    color: var(--text-body);
+    border: var(--border-card);
+    border-radius: var(--radius-tile);
+    font-weight: var(--fw-bold);
+    transition: opacity 200ms ease;
+  }
+
+  .btn-secondary:hover {
+    opacity: 0.7;
+  }
+
+  /* Progress track */
+  .progress-bar {
+    height: 6px;
+    background: var(--neutral-e8);
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 9999px;
+    background: var(--isracard-blue);
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Blue brand band (top of intro / export card) */
+  .ds-band {
+    background: var(--surface-brand);
+    color: var(--text-on-brand);
+  }
+
+  .ds-band h1,
+  .ds-band h2,
+  .ds-band h3 {
+    color: var(--text-on-brand);
+  }
+}
+
+/* RTL numeric fix - keep numbers LTR */
+.ltr-num {
+  direction: ltr;
+  display: inline-block;
+}
+
+/* Rating scale focus styles */
+.rating-btn:focus-visible {
+  outline: 2px solid var(--isracard-blue);
+  outline-offset: 2px;
+}
+
+/* Score bar animation */
+@keyframes scoreGrow {
+  from { width: 0%; }
+  to { width: var(--score-width); }
+}
+
+.score-bar-animated {
+  animation: scoreGrow 1s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
+}
+
+/* Print styles */
+@media print {
+  body {
+    background: white !important;
+    color: #000 !important;
+    direction: rtl;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .ds-card {
+    box-shadow: none !important;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    display: none !important;
+  }
+}
