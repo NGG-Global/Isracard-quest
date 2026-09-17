@@ -29,31 +29,25 @@ export default function QuestionCard({ currentIndex, direction, answers, onAnswe
   const questionNumberInDim = isHuman ? question.id : question.id - 5
 
   return (
-    <div className="min-h-dvh flex flex-col">
+    <div className="screen">
       <ProgressHeader currentIndex={currentIndex} />
 
-      {/* Dimension badge */}
-      <div className="px-4 pt-3 pb-1 no-print">
-        <div className="max-w-2xl mx-auto">
-          <div className="flex items-center gap-3">
+      <main className="flex-1 flex flex-col">
+        <div className="wrap stack" style={{ marginBlock: 'auto', paddingBlock: 'var(--s-5)' }}>
+          {/* Dimension badge */}
+          <div className="flex items-center no-print" style={{ gap: 'var(--s-3)' }}>
             <span
-              className="text-xs font-bold px-3 py-1.5 rounded-[10px] transition-colors duration-500"
+              className="ds-badge text-xs transition-colors duration-500"
               style={{ background: dim.fill, color: dim.onFill }}
             >
               {dim.name}
             </span>
-            <span className="text-xs text-neutral-shadow">
-              שאלה {questionNumberInDim} מתוך 5
-            </span>
+            <span className="text-xs text-neutral-shadow">שאלה {questionNumberInDim} מתוך 5</span>
           </div>
-        </div>
-      </div>
 
-      {/* Question card */}
-      <div className="flex-1 flex items-start px-4 py-3">
-        <div className="w-full max-w-2xl mx-auto">
+          {/* Question card */}
           <AnimatePresence mode="wait" custom={direction}>
-            <motion.div
+            <motion.section
               key={question.id}
               custom={direction}
               variants={cardVariants}
@@ -61,17 +55,18 @@ export default function QuestionCard({ currentIndex, direction, answers, onAnswe
               animate="center"
               exit="exit"
               transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-              className="ds-card p-6 sm:p-8"
+              className="ds-card flex flex-col"
+              style={{ gap: 'var(--s-5)' }}
             >
-              <div className="flex items-start gap-4 mb-6">
+              <div className="flex items-center" style={{ gap: 'var(--s-4)' }}>
                 <span
-                  className="ds-tile w-11 h-11 text-lg rounded-[14px]"
-                  style={{ background: dim.fill, color: dim.onFill }}
+                  className="ds-tile r-sm text-lg"
+                  style={{ width: 44, height: 44, background: dim.fill, color: dim.onFill }}
                   aria-hidden="true"
                 >
                   {question.id}
                 </span>
-                <p className="text-lg sm:text-xl font-bold leading-body pt-2">{question.text}</p>
+                <p className="text-lg sm:text-xl font-bold leading-body">{question.text}</p>
               </div>
               <RatingScale
                 value={currentAnswer}
@@ -79,22 +74,22 @@ export default function QuestionCard({ currentIndex, direction, answers, onAnswe
                 questionId={question.id}
                 dim={dim}
               />
-            </motion.div>
+            </motion.section>
           </AnimatePresence>
 
           {/* Nav buttons */}
-          <div className="flex gap-3 mt-5 no-print">
+          <div className="flex no-print" style={{ gap: 'var(--s-3)' }}>
             {!isFirst && (
-              <button onClick={onBack} className="btn-secondary">
+              <button onClick={onBack} className="btn btn-secondary">
                 חזרה
               </button>
             )}
-            <button onClick={onNext} disabled={currentAnswer === undefined} className="btn-primary flex-1">
+            <button onClick={onNext} disabled={currentAnswer === undefined} className="btn btn-primary flex-1">
               {isLast ? 'לתוצאות' : 'הבא'}
             </button>
           </div>
         </div>
-      </div>
+      </main>
 
       <PageFooter />
     </div>

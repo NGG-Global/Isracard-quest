@@ -33,7 +33,6 @@ export default {
       },
       borderRadius: {
         card: '37px',
-        tile: '23px',
       },
       boxShadow: {
         card: '0 5.33px 13.33px rgba(65,70,77,.5)',

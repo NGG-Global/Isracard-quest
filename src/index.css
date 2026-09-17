@@ -4,9 +4,11 @@
 
 /*
   Isracard design tokens — read from the Isracard/NGG deck design system.
-  Values are used as given; no new colour, radius or effect is introduced.
+  Colour, type and the card radius are used as given. The layout scale below
+  is derived from the system's own proportions, not invented per screen.
 */
 :root {
+  /* ---- Brand (design system, verbatim) ---- */
   --isracard-blue: #2221ba;
   --isracard-ink: #000000;
   --isracard-white: #ffffff;
@@ -33,8 +35,6 @@
   --on-periwinkle: var(--isracard-ink);
   --on-peach: var(--isracard-ink);
   --on-amber: var(--isracard-ink);
-  --radius-card: 37px;
-  --radius-tile: 23px;
   --border-card: 1px solid #bfbfbf;
   --shadow-card: 0 5.33px 13.33px rgba(65, 70, 77, 0.5);
   --fw-regular: 400;
@@ -42,6 +42,44 @@
   --lh-tight: 0.9;
   --lh-body: 1.25;
   --font-core: 'Assistant', 'Segoe UI', Arial, sans-serif;
+
+  /* ---- Radius ----
+     The system rounds an object by about 13% of its shorter side
+     (tile 23/174, card 37/246). Every radius below follows that one rule,
+     snapped to the scale, so tiles and cards read as the same shape family. */
+  --radius-card: 37px;   /* system token, for cards */
+  --r-xs: 4px;           /* objects up to 36px: small tiles, badges */
+  --r-sm: 6px;           /* 40-48px tiles */
+  --r-md: 8px;           /* 52-56px: controls, dimension tile */
+  --r-lg: 10px;          /* 64-80px: score tile, inset blocks */
+
+  /* ---- Spacing scale (8px base) ---- */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 40px;
+  --s-8: 56px;
+
+  /* ---- Layout ---- */
+  --gutter: var(--s-4);        /* one page gutter, both edges */
+  --measure: 672px;            /* one content column width */
+  --card-pad: var(--s-5);      /* one card padding, all four sides */
+  --stack: var(--s-5);         /* one gap between sections */
+  --band-pad-top: var(--s-6);
+  --band-pad-bottom: var(--s-8);
+  --band-overlap: 20px;        /* how far the content column rides up */
+  --control-h: 52px;           /* one height for every button */
+  --track-h: 8px;              /* one height for every progress track */
+}
+
+@media (min-width: 640px) {
+  :root {
+    --gutter: var(--s-5);
+    --card-pad: var(--s-6);
+  }
 }
 
 @layer base {
@@ -71,24 +109,77 @@
 }
 
 @layer components {
-  /* White rounded card — InfoCard */
+  /* ---- Layout primitives: every screen uses these, so edges cannot drift ---- */
+
+  .screen {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* The one content column. Header band, body and footer all use it, so the
+     left and right edges line up down the whole page. */
+  .wrap {
+    width: 100%;
+    max-width: calc(var(--measure) + var(--gutter) * 2);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  /* Solid Isracard-blue plate — one background colour per surface */
+  .band {
+    background: var(--surface-brand);
+    color: var(--text-on-brand);
+    padding-block: var(--band-pad-top) var(--band-pad-bottom);
+  }
+
+  .band h1,
+  .band h2,
+  .band h3 {
+    color: var(--text-on-brand);
+  }
+
+  /* Body column, riding up over the band by one fixed amount */
+  .body-col {
+    flex: 1 1 auto;
+    margin-top: calc(var(--band-overlap) * -1);
+  }
+
+  /* Even vertical rhythm between sections */
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--stack);
+  }
+
+  /* ---- Surfaces ---- */
+
   .ds-card {
     background: var(--surface-card);
     border: var(--border-card);
     border-radius: var(--radius-card);
     box-shadow: var(--shadow-card);
+    padding: var(--card-pad);
   }
 
-  /* Flat variant for dense inner content (no shadow) */
+  /* Flat variant for secondary blocks (no shadow) */
   .ds-card-flat {
     background: var(--surface-card);
     border: var(--border-card);
     border-radius: var(--radius-card);
+    padding: var(--card-pad);
   }
 
-  /* Rounded colour square — ColorTile */
+  /* Inset grey block */
+  .ds-inset {
+    background: var(--neutral-e8);
+    border-radius: var(--r-lg);
+    padding: var(--s-4) var(--s-5);
+  }
+
+  /* Rounded colour square — the system's ColorTile */
   .ds-tile {
-    border-radius: var(--radius-tile);
+    border-radius: var(--r-sm);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -97,14 +188,42 @@
     flex-shrink: 0;
   }
 
-  /* Primary action — Isracard blue plate, white text. State = opacity only. */
+  /* Pill-free badge, same shape family as the tiles */
+  .ds-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--r-xs);
+    padding: 6px 12px;
+    font-weight: var(--fw-bold);
+    line-height: 1.2;
+  }
+
+  .r-xs { border-radius: var(--r-xs); }
+  .r-sm { border-radius: var(--r-sm); }
+  .r-md { border-radius: var(--r-md); }
+  .r-lg { border-radius: var(--r-lg); }
+
+  /* ---- Controls: one height, one radius, opacity-only states ---- */
+
+  .btn {
+    height: var(--control-h);
+    flex-shrink: 0;          /* keeps its height when stacked in a column */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding-inline: var(--s-5);
+    border-radius: var(--r-md);
+    font-weight: var(--fw-bold);
+    font-size: 16px;
+    line-height: 1;
+    transition: opacity 200ms ease;
+  }
+
   .btn-primary {
-    @apply px-8 py-3.5 text-base;
     background: var(--isracard-blue);
     color: var(--on-blue);
-    border-radius: var(--radius-tile);
-    font-weight: var(--fw-bold);
-    transition: opacity 200ms ease;
+    border: 1px solid var(--isracard-blue);
   }
 
   .btn-primary:hover:not(:disabled) {
@@ -116,46 +235,30 @@
     cursor: not-allowed;
   }
 
-  /* Secondary action — white card surface with the card stroke */
   .btn-secondary {
-    @apply px-6 py-3 text-sm;
     background: var(--surface-card);
     color: var(--text-body);
     border: var(--border-card);
-    border-radius: var(--radius-tile);
-    font-weight: var(--fw-bold);
-    transition: opacity 200ms ease;
   }
 
   .btn-secondary:hover {
     opacity: 0.7;
   }
 
-  /* Progress track */
-  .progress-bar {
-    height: 6px;
+  /* ---- Progress and score tracks: one height for both ---- */
+
+  .track {
+    height: var(--track-h);
     background: var(--neutral-e8);
     border-radius: 9999px;
     overflow: hidden;
   }
 
-  .progress-fill {
+  .track-fill {
     height: 100%;
     border-radius: 9999px;
     background: var(--isracard-blue);
     transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  /* Blue brand band (top of intro / export card) */
-  .ds-band {
-    background: var(--surface-brand);
-    color: var(--text-on-brand);
-  }
-
-  .ds-band h1,
-  .ds-band h2,
-  .ds-band h3 {
-    color: var(--text-on-brand);
   }
 }
 
@@ -201,8 +304,7 @@
     box-shadow: none !important;
   }
 
-  .btn-primary,
-  .btn-secondary {
+  .btn {
     display: none !important;
   }
 }
